@@ -1,0 +1,100 @@
+# Mundos onde o plugin NÃO atua
+disabled-worlds: []
+
+# ---------- 1) Dormir mobs ociosos ----------
+sleep:
+  enabled: true
+  check-interval-ticks: 20
+  wake-radius: 24.0             # player dentro desse raio acorda o mob
+  hysteresis: 4.0               # só dorme se o player estiver além de wake-radius + isso
+  idle-checks-required: 3
+  idle-move-threshold: 0.25
+  skip-named: true
+  skip-tamed: true
+  skip-leashed: true
+  # Modo adaptativo: com TPS baixo, o raio de acordar encolhe e mobs dormem mais rápido
+  adaptive:
+    enabled: true
+    low-tps: 17.0
+    stress-wake-radius: 16.0
+  ignored-types:
+    - villager
+    - wandering_trader
+    - allay
+    - iron_golem
+    - ender_dragon
+    - wither
+    - warden
+
+# ---------- 2) Agrupar pathfinding ----------
+group-pathing:
+  enabled: true
+  interval-ticks: 10
+  min-group-size: 4
+  cluster-radius: 10.0
+  release-distance: 10.0
+  search-radius: 40.0
+  lookahead-points: 3
+  follow-speed: 1.0
+  types:
+    - zombie
+    - husk
+    - drowned
+    - zombie_villager
+    - spider
+    - cave_spider
+    - silverfish
+
+# ---------- 3) Limpeza de entidades ----------
+cleanup:
+  items:
+    enabled: true
+    interval-seconds: 15
+    max-age-seconds: 180        # itens no chão mais velhos que isso somem (vanilla: 300)
+    # Carência: item recém-caído NUNCA é removido (nem por idade, limite de chunk,
+    # /mobopt clear ou limpeza de emergência) antes desse tempo.
+    min-age-seconds: 30
+    player-drop-min-age-seconds: 120   # itens jogados por players ganham carência maior
+    # Shulker boxes no chão nunca são removidas pela LIMPEZA do plugin (idade, limite
+    # por chunk, /mobopt clear, emergência de memória).
+    protect-shulker-boxes: true
+    # Fogo, lava, cacto, explosão e void destroem a shulker box normalmente (vanilla).
+    # Esta opção só impede o despawn por tempo (5 min) do vanilla. false = ela some em 5 min.
+    shulker-never-despawn: true
+    max-per-chunk: 150          # acima disso, somem os mais velhos
+    protect-items-with-meta: true   # itens com nome/encantamento/etc.
+    protected:                  # estes itens nunca são removidos pela limpeza
+      - netherite_ingot
+      - netherite_scrap
+      - diamond
+      - emerald
+      - elytra
+      - totem_of_undying
+      - nether_star
+      - enchanted_golden_apple
+      - beacon
+      - dragon_egg
+  mob-limits:
+    enabled: true
+    interval-seconds: 15
+    max-per-chunk: 40
+    max-per-type-per-chunk: 24
+    # Só mobs "despawnáveis" (sem nome, não domados, não amarrados) são removidos,
+    # sempre os mais longe dos players primeiro.
+    # Spawns nessas razões são cancelados quando o chunk está cheio.
+    limited-spawn-reasons:
+      - NATURAL
+      - SPAWNER
+      - CHUNK_GEN
+
+# ---------- 4) Guarda de memória ----------
+memory:
+  enabled: true
+  check-interval-seconds: 10
+  warn-percent: 80              # só avisa no console
+  critical-percent: 90          # dispara limpeza de emergência
+  emergency-cooldown-seconds: 60
+  gc-on-critical: false         # System.gc() pode travar o servidor; deixe false
+  unload-stale-chunks: true     # na emergência, descarrega chunks longe dos players
+  max-chunks-per-run: 150
+  unload-margin-chunks: 2       # além da distância de visão/simulação

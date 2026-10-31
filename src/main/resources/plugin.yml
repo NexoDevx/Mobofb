@@ -1,0 +1,13 @@
+name: MobOptimizer
+version: '${version}'
+main: com.mobopt.MobOptimizer
+api-version: '26.3'
+description: Dorme mobs ociosos, agrupa pathfinding, limpa entidades e protege a RAM.
+commands:
+  mobopt:
+    description: Status, limpeza e reload do MobOptimizer
+    usage: /mobopt <status|mem|clear|reload>
+    permission: mobopt.admin
+permissions:
+  mobopt.admin:
+    default: op
